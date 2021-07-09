@@ -1,1 +1,0 @@
-# REANA-Workflow-Engine-Snakemake
