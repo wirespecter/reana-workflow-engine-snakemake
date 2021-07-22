@@ -23,15 +23,8 @@ tests_require = [
 ]
 
 extras_require = {
-    "debug": [
-        "wdb",
-        "ipdb",
-        "Flask-DebugToolbar",
-    ],
-    "docs": [
-        "Sphinx>=1.5.1",
-        "sphinx-rtd-theme>=0.1.9",
-    ],
+    "debug": ["wdb", "ipdb", "Flask-DebugToolbar",],
+    "docs": ["Sphinx>=1.5.1", "sphinx-rtd-theme>=0.1.9",],
     "tests": tests_require,
 }
 
@@ -67,9 +60,7 @@ setup(
     author="REANA",
     author_email="info@reana.io",
     url="https://github.com/reanahub/reana-workflow-engine-snakemake",
-    packages=[
-        "reana_workflow_engine_snakemake",
-    ],
+    packages=["reana_workflow_engine_snakemake",],
     zip_safe=False,
     install_requires=install_requires,
     entry_points={
