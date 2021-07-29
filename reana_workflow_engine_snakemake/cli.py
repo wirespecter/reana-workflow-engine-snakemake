@@ -5,6 +5,7 @@
 #
 # REANA is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
+
 """REANA-Workflow-Engine-Snakemake command line interface."""
 
 
@@ -20,6 +21,8 @@ from reana_commons.config import (
 from reana_commons.workflow_engine import create_workflow_engine_command
 
 from reana_workflow_engine_snakemake.config import LOGGING_MODULE
+from reana_workflow_engine_snakemake.executor import run_jobs
+
 
 logging.basicConfig(level=REANA_LOG_LEVEL, format=REANA_LOG_FORMAT)
 log = logging.getLogger(LOGGING_MODULE)
@@ -45,7 +48,7 @@ def run_snakemake_workflow_engine_adapter(
     log.info("Snakemake workflows are not yet supported. Skipping...")
     log.info(f"Workflow spec received: {workflow_file}")
     publisher.publish_workflow_status(workflow_uuid, 1)
-    # FIXME: Implement Snakemake job scheduling logic
+    run_jobs(rjc_api_client, workflow_workspace, workflow_file, workflow_parameters)
     publisher.publish_workflow_status(workflow_uuid, 2)
 
 
