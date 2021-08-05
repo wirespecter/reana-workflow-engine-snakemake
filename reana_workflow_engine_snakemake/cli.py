@@ -39,6 +39,9 @@ def run_snakemake_workflow_engine_adapter(
     **kwargs,
 ):
     """Run a ``snakemake`` workflow."""
+    running_status = 1
+    finsihed_status = 2
+    failed_status = 3
     workflow_workspace = "{0}/{1}".format(SHARED_VOLUME_PATH, workflow_workspace)
     # use some shared object between tasks.
     os.environ["workflow_uuid"] = workflow_uuid
@@ -47,9 +50,20 @@ def run_snakemake_workflow_engine_adapter(
 
     log.info("Snakemake workflows are not yet supported. Skipping...")
     log.info(f"Workflow spec received: {workflow_file}")
-    publisher.publish_workflow_status(workflow_uuid, 1)
-    run_jobs(rjc_api_client, workflow_workspace, workflow_file, workflow_parameters)
-    publisher.publish_workflow_status(workflow_uuid, 2)
+    publisher.publish_workflow_status(workflow_uuid, running_status)
+    success = run_jobs(
+        rjc_api_client,
+        publisher,
+        workflow_workspace,
+        workflow_file,
+        workflow_parameters,
+    )
+    if success:
+        publisher.publish_workflow_status(workflow_uuid, finsihed_status)
+    else:
+        publisher.publish_workflow_status(
+            workflow_uuid, failed_status, logs="Workflow exited unexpectedly."
+        )
 
 
 run_snakemake_workflow = create_workflow_engine_command(
