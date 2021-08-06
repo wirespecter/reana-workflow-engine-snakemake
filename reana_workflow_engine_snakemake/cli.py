@@ -16,7 +16,6 @@ from reana_commons.config import (
     REANA_LOG_FORMAT,
     REANA_LOG_LEVEL,
     REANA_WORKFLOW_UMASK,
-    SHARED_VOLUME_PATH,
 )
 from reana_commons.workflow_engine import create_workflow_engine_command
 
@@ -42,7 +41,6 @@ def run_snakemake_workflow_engine_adapter(
     running_status = 1
     finsihed_status = 2
     failed_status = 3
-    workflow_workspace = "{0}/{1}".format(SHARED_VOLUME_PATH, workflow_workspace)
     # use some shared object between tasks.
     os.environ["workflow_uuid"] = workflow_uuid
     os.environ["workflow_workspace"] = workflow_workspace
