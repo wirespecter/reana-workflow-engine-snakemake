@@ -51,6 +51,7 @@ class REANAClusterExecutor(GenericClusterExecutor):
 
         workflow_workspace = os.getenv("workflow_workspace", "default")
         try:
+            job.reana_job_id = None
             logger.info(f"Job '{job.name}' received, command: {job.shellcmd}")
             logger.info(f"Environment: {job.container_img_url}")
             if job.is_shell:
@@ -68,6 +69,7 @@ class REANAClusterExecutor(GenericClusterExecutor):
                 job_id = submit_job(
                     self.rjc_api_client, self.publisher, job_request_body
                 )
+                job.reana_job_id = job_id
             elif job.is_run:
                 # Python code
                 logger.error("Python code execution is not supported yet.")
@@ -108,6 +110,34 @@ class REANAClusterExecutor(GenericClusterExecutor):
                     jobfailed,
                 )
             )
+
+    def _handle_job_status(self, job, status):
+        workflow_uuid = os.getenv("workflow_uuid", "default")
+        job_id = job.reana_job_id
+        log.info(f"{status} job: {job_id}")
+        message = {
+            "progress": build_progress_message(
+                **{status: {"total": 1, "job_ids": [job_id]}}
+            )
+        }
+        status_running = 1
+        status_failed = 3
+        status_mapping = {"finished": status_running, "failed": status_failed}
+        self.publisher.publish_workflow_status(
+            workflow_uuid, status_mapping[status], message=message
+        )
+
+    def handle_job_success(self, job):
+        """Override job success method to publish job status."""
+        super().handle_job_success(job)
+
+        self._handle_job_status(job, "finished")
+
+    def handle_job_error(self, job):
+        """Override job error method to publish job status."""
+        super().handle_job_error(job)
+
+        self._handle_job_status(job, "failed")
 
 
 def submit_job(rjc_api_client, publisher, job_request_body):
