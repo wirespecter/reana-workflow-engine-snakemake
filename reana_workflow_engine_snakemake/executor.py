@@ -65,6 +65,20 @@ class REANAClusterExecutor(GenericClusterExecutor):
                     "workflow_workspace": workflow_workspace,
                     "job_name": job.name,
                     "cvmfs_mounts": MOUNT_CVMFS,
+                    "compute_backend": job.resources.get("compute_backend", ""),
+                    "kerberos": job.resources.get("kerberos", False),
+                    "unpacked_img": job.resources.get("unpacked_img", False),
+                    "kubernetes_uid": job.resources.get("kubernetes_uid"),
+                    "kubernetes_memory_limit": job.resources.get(
+                        "kubernetes_memory_limit"
+                    ),
+                    "voms_proxy": job.resources.get("voms_proxy", False),
+                    "htcondor_max_runtime": job.resources.get(
+                        "htcondor_max_runtime", ""
+                    ),
+                    "htcondor_accounting_group": job.resources.get(
+                        "htcondor_accounting_group", ""
+                    ),
                 }
                 job_id = submit_job(
                     self.rjc_api_client, self.publisher, job_request_body
