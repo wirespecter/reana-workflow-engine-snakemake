@@ -8,7 +8,11 @@
 FROM python:3.8-slim
 # hadolint ignore=DL3008, DL3013, DL3015
 RUN apt-get update && \
-    apt-get install -y vim-tiny && \
+    apt-get install -y \
+    vim-tiny \
+    gcc \
+    graphviz \
+    graphviz-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     pip install --upgrade pip

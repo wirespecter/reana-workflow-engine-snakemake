@@ -55,6 +55,7 @@ def run_snakemake_workflow_engine_adapter(
         workflow_workspace,
         workflow_file,
         workflow_parameters,
+        operational_options=operational_options,
     )
     if success:
         publisher.publish_workflow_status(workflow_uuid, finsihed_status)

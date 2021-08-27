@@ -175,7 +175,12 @@ def submit_job(rjc_api_client, publisher, job_request_body):
 
 
 def run_jobs(
-    rjc_api_client, publisher, workflow_workspace, workflow_file, workflow_parameters
+    rjc_api_client,
+    publisher,
+    workflow_workspace,
+    workflow_file,
+    workflow_parameters,
+    operational_options={},
 ):
     """Run Snakemake jobs using custom REANA executor."""
     # Inject RJC API client and workflow status publisher in the REANA executor
@@ -196,5 +201,6 @@ def run_jobs(
         workdir=workflow_workspace,
         immediate_submit=True,
         notemp=True,
+        report=operational_options.get("report", "report.html"),
     )
     return success
