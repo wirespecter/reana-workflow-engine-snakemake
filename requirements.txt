@@ -24,32 +24,37 @@ gitdb==4.0.7              # via gitpython
 gitpython==3.1.18         # via snakemake
 idna==2.10                # via jsonschema, requests
 ipython-genutils==0.2.0   # via nbformat, traitlets
+jinja2==3.0.1             # via snakemake
 jsonpointer==2.1          # via jsonschema
 jsonref==0.2              # via bravado-core
 jsonschema[format]==3.2.0  # via bravado-core, nbformat, reana-commons, snakemake, swagger-spec-validator
 jupyter-core==4.7.1       # via nbformat
 kombu==4.6.11             # via reana-commons
+markupsafe==2.0.1         # via jinja2
 mock==3.0.5               # via reana-commons
 monotonic==1.6            # via bravado
 msgpack-python==0.5.6     # via bravado
 msgpack==1.0.2            # via bravado-core
 nbformat==5.1.3           # via snakemake
+networkx==2.6.2           # via snakemake
 psutil==5.8.0             # via snakemake
 pulp==2.4                 # via snakemake
+pygments==2.10.0          # via snakemake
+pygraphviz==1.7           # via snakemake
 pyparsing==2.4.7          # via amply
 pyrsistent==0.18.0        # via jsonschema
 python-dateutil==2.8.1    # via bravado, bravado-core
 pytz==2021.1              # via bravado-core, fs
 pyyaml==5.4.1             # via bravado, bravado-core, reana-commons, snakemake, swagger-spec-validator
 ratelimiter==1.2.0.post0  # via snakemake
-reana-commons[snakemake]==0.8.0a21  # via reana-workflow-engine-snakemake (setup.py)
+reana-commons[snakemake]==0.8.0a23  # via reana-workflow-engine-snakemake (setup.py)
 requests==2.25.1          # via bravado, snakemake
 rfc3987==1.3.8            # via jsonschema
 simplejson==3.17.2        # via bravado, bravado-core
 six==1.16.0               # via bravado, bravado-core, fs, jsonschema, mock, python-dateutil, swagger-spec-validator
 smart-open==5.1.0         # via snakemake
 smmap==4.0.0              # via gitdb
-snakemake==6.5.3          # via reana-commons
+snakemake[reports]==6.5.3  # via reana-commons
 stopit==1.1.2             # via snakemake
 strict-rfc3339==0.7       # via jsonschema
 swagger-spec-validator==2.7.3  # via bravado-core
