@@ -14,3 +14,6 @@ MOUNT_CVMFS = os.getenv("REANA_MOUNT_CVMFS", "false")
 
 LOGGING_MODULE = "reana-workflow-engine-snakemake"
 """REANA Workflow Engine Snakemake logging module."""
+
+DEFAULT_SNAKEMAKE_REPORT_FILENAME = "report.html"
+"""Snakemake report default filename."""

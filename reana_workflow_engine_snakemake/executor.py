@@ -20,7 +20,11 @@ from snakemake.logging import logger
 from snakemake import scheduler  # for monkeypatch
 
 
-from reana_workflow_engine_snakemake.config import LOGGING_MODULE, MOUNT_CVMFS
+from reana_workflow_engine_snakemake.config import (
+    DEFAULT_SNAKEMAKE_REPORT_FILENAME,
+    LOGGING_MODULE,
+    MOUNT_CVMFS,
+)
 
 
 log = logging.getLogger(LOGGING_MODULE)
@@ -84,6 +88,7 @@ class REANAClusterExecutor(GenericClusterExecutor):
                     self.rjc_api_client, self.publisher, job_request_body
                 )
                 job.reana_job_id = job_id
+                self.workflow.persistence.started(job, external_jobid=job.reana_job_id)
             elif job.is_run:
                 # Python code
                 logger.error("Python code execution is not supported yet.")
@@ -183,6 +188,18 @@ def run_jobs(
     operational_options={},
 ):
     """Run Snakemake jobs using custom REANA executor."""
+
+    def _generate_report(workflow_file_path):
+        """Generate HTML report."""
+        success = snakemake(
+            workflow_file_path,
+            config=workflow_parameters,
+            workdir=workflow_workspace,
+            report=operational_options.get("report", DEFAULT_SNAKEMAKE_REPORT_FILENAME),
+        )
+        if not success:
+            logger.error("Error generating workflow HTML report.")
+
     # Inject RJC API client and workflow status publisher in the REANA executor
     REANAClusterExecutor.rjc_api_client = rjc_api_client
     REANAClusterExecutor.publisher = publisher
@@ -201,6 +218,8 @@ def run_jobs(
         workdir=workflow_workspace,
         immediate_submit=True,
         notemp=True,
-        report=operational_options.get("report", "report.html"),
     )
+    # Once the workflow is finished, generate the report,
+    # taking into account the metadata generated.
+    _generate_report(workflow_file_path)
     return success
