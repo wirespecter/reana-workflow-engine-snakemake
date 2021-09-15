@@ -46,7 +46,6 @@ def run_snakemake_workflow_engine_adapter(
     os.environ["workflow_workspace"] = workflow_workspace
     os.umask(REANA_WORKFLOW_UMASK)
 
-    log.info("Snakemake workflows are not yet supported. Skipping...")
     log.info(f"Workflow spec received: {workflow_file}")
     publisher.publish_workflow_status(workflow_uuid, running_status)
     success = run_jobs(

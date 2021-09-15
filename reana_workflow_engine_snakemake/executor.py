@@ -15,7 +15,7 @@ from collections import namedtuple
 
 from reana_commons.utils import build_progress_message
 from snakemake import snakemake
-from snakemake.executors import GenericClusterExecutor
+from snakemake.executors import ClusterExecutor, GenericClusterExecutor
 from snakemake.logging import logger
 from snakemake import scheduler  # for monkeypatch
 
@@ -148,7 +148,10 @@ class REANAClusterExecutor(GenericClusterExecutor):
 
     def handle_job_success(self, job):
         """Override job success method to publish job status."""
-        super().handle_job_success(job)
+        # override handle_touch = True, to enable `touch()` in Snakefiles
+        super(ClusterExecutor, self).handle_job_success(
+            job, upload_remote=False, handle_log=False, handle_touch=True
+        )
 
         self._handle_job_status(job, "finished")
 
