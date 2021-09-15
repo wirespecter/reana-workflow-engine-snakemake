@@ -219,8 +219,8 @@ def run_jobs(
         cluster="reana",
         config=workflow_parameters,
         workdir=workflow_workspace,
-        immediate_submit=True,
         notemp=True,
+        nodes=4,  # enables DAG parallelization
     )
     # Once the workflow is finished, generate the report,
     # taking into account the metadata generated.
