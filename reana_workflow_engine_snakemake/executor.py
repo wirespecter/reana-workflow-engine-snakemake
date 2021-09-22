@@ -13,12 +13,13 @@ import subprocess
 import logging
 from collections import namedtuple
 
+from reana_commons.config import REANA_DEFAULT_SNAKEMAKE_ENV_IMAGE
 from reana_commons.utils import build_progress_message
 from snakemake import snakemake
 from snakemake.executors import ClusterExecutor, GenericClusterExecutor
+from snakemake.jobs import Job
 from snakemake.logging import logger
 from snakemake import scheduler  # for monkeypatch
-
 
 from reana_workflow_engine_snakemake.config import (
     DEFAULT_SNAKEMAKE_REPORT_FILENAME,
@@ -57,13 +58,13 @@ class REANAClusterExecutor(GenericClusterExecutor):
         try:
             job.reana_job_id = None
             logger.info(f"Job '{job.name}' received, command: {job.shellcmd}")
-            logger.info(f"Environment: {job.container_img_url}")
+            container_image = self._get_container_image(job)
             if job.is_shell:
                 # Shell command
                 workflow_uuid = os.getenv("workflow_uuid", "default")
                 job_request_body = {
                     "workflow_uuid": workflow_uuid,
-                    "image": job.container_img_url.replace("docker://", ""),
+                    "image": container_image,
                     "cmd": f"cd {workflow_workspace} && {job.shellcmd} && touch {jobfinished} || (touch {jobfailed}; exit 1)",
                     "prettified_cmd": job.shellcmd,
                     "workflow_workspace": workflow_workspace,
@@ -129,6 +130,15 @@ class REANAClusterExecutor(GenericClusterExecutor):
                     jobfailed,
                 )
             )
+
+    def _get_container_image(self, job: Job) -> str:
+        if job.container_img_url:
+            container_image = job.container_img_url.replace("docker://", "")
+            logger.info(f"Environment: {container_image}")
+        else:
+            container_image = REANA_DEFAULT_SNAKEMAKE_ENV_IMAGE
+            logger.info(f"No environment specified, falling back to: {container_image}")
+        return container_image
 
     def _handle_job_status(self, job, status):
         workflow_uuid = os.getenv("workflow_uuid", "default")
