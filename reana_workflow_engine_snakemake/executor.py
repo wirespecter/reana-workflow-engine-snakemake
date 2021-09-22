@@ -18,7 +18,6 @@ from reana_commons.utils import build_progress_message
 from snakemake import snakemake
 from snakemake.executors import ClusterExecutor, GenericClusterExecutor
 from snakemake.jobs import Job
-from snakemake.logging import logger
 from snakemake import scheduler  # for monkeypatch
 
 from reana_workflow_engine_snakemake.config import (
@@ -57,7 +56,7 @@ class REANAClusterExecutor(GenericClusterExecutor):
         workflow_workspace = os.getenv("workflow_workspace", "default")
         try:
             job.reana_job_id = None
-            logger.info(f"Job '{job.name}' received, command: {job.shellcmd}")
+            log.info(f"Job '{job.name}' received, command: {job.shellcmd}")
             container_image = self._get_container_image(job)
             if job.is_shell:
                 # Shell command
@@ -92,10 +91,10 @@ class REANAClusterExecutor(GenericClusterExecutor):
                 self.workflow.persistence.started(job, external_jobid=job.reana_job_id)
             elif job.is_run:
                 # Python code
-                logger.error("Python code execution is not supported yet.")
+                log.error("Python code execution is not supported yet.")
 
         except Exception as excep:
-            logger.error(f"Error submitting job {job.name}: {excep}")
+            log.error(f"Error submitting job {job.name}: {excep}")
             error_callback(job)
             return
         # We don't need to call `submit_callback(job)` manually since
@@ -111,7 +110,7 @@ class REANAClusterExecutor(GenericClusterExecutor):
                     f"touch {jobfinished}", shell=True,
                 )
             except subprocess.CalledProcessError as ex:
-                logger.error(
+                log.error(
                     "Error creating `all` jobfinished file (exit code {}):\n{}".format(
                         ex.returncode, ex.output.decode()
                     )
@@ -134,10 +133,10 @@ class REANAClusterExecutor(GenericClusterExecutor):
     def _get_container_image(self, job: Job) -> str:
         if job.container_img_url:
             container_image = job.container_img_url.replace("docker://", "")
-            logger.info(f"Environment: {container_image}")
+            log.info(f"Environment: {container_image}")
         else:
             container_image = REANA_DEFAULT_SNAKEMAKE_ENV_IMAGE
-            logger.info(f"No environment specified, falling back to: {container_image}")
+            log.info(f"No environment specified, falling back to: {container_image}")
         return container_image
 
     def _handle_job_status(self, job, status):
@@ -209,9 +208,10 @@ def run_jobs(
             config=workflow_parameters,
             workdir=workflow_workspace,
             report=operational_options.get("report", DEFAULT_SNAKEMAKE_REPORT_FILENAME),
+            keep_logger=True,
         )
         if not success:
-            logger.error("Error generating workflow HTML report.")
+            log.error("Error generating workflow HTML report.")
 
     # Inject RJC API client and workflow status publisher in the REANA executor
     REANAClusterExecutor.rjc_api_client = rjc_api_client
@@ -231,6 +231,7 @@ def run_jobs(
         workdir=workflow_workspace,
         notemp=True,
         nodes=4,  # enables DAG parallelization
+        keep_logger=True,
     )
     # Once the workflow is finished, generate the report,
     # taking into account the metadata generated.
