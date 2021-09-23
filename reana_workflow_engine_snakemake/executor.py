@@ -24,6 +24,7 @@ from reana_workflow_engine_snakemake.config import (
     DEFAULT_SNAKEMAKE_REPORT_FILENAME,
     LOGGING_MODULE,
     MOUNT_CVMFS,
+    SNAKEMAKE_MAX_PARALLEL_JOBS,
 )
 
 
@@ -230,7 +231,7 @@ def run_jobs(
         config=workflow_parameters,
         workdir=workflow_workspace,
         notemp=True,
-        nodes=4,  # enables DAG parallelization
+        nodes=SNAKEMAKE_MAX_PARALLEL_JOBS,  # enables DAG parallelization
         keep_logger=True,
     )
     # Once the workflow is finished, generate the report,
