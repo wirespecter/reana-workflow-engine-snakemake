@@ -40,7 +40,7 @@ setup_requires = [
 ]
 
 install_requires = [
-    "reana-commons[snakemake_reports]>=0.8.0a26,<0.9.0",
+    "reana-commons[snakemake_reports]>=0.8.0a31,<0.9.0",
 ]
 
 packages = find_packages()
