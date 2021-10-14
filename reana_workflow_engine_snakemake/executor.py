@@ -12,6 +12,7 @@ import os
 import subprocess
 import logging
 from collections import namedtuple
+from typing import Callable
 
 from reana_commons.config import REANA_DEFAULT_SNAKEMAKE_ENV_IMAGE
 from reana_commons.utils import build_progress_message
@@ -25,6 +26,10 @@ from reana_workflow_engine_snakemake.config import (
     LOGGING_MODULE,
     MOUNT_CVMFS,
     SNAKEMAKE_MAX_PARALLEL_JOBS,
+)
+from reana_workflow_engine_snakemake.utils import (
+    publish_job_submission,
+    publish_workflow_start,
 )
 
 
@@ -40,7 +45,13 @@ REANAClusterJob = namedtuple(
 class REANAClusterExecutor(GenericClusterExecutor):
     """REANA Cluster Snakemake executor implementation."""
 
-    def run(self, job, callback=None, submit_callback=None, error_callback=None):
+    def run(
+        self,
+        job: Job,
+        callback: Callable = None,
+        submit_callback: Callable = None,
+        error_callback: Callable = None,
+    ):
         """Override GenericClusterExecutor run method."""
         super()._run(job)
         jobid = job.jobid
@@ -55,13 +66,16 @@ class REANAClusterExecutor(GenericClusterExecutor):
         )
 
         workflow_workspace = os.getenv("workflow_workspace", "default")
+        workflow_uuid = os.getenv("workflow_uuid", "default")
+        publish_workflow_start(
+            workflow_uuid=workflow_uuid, publisher=self.publisher, job=job
+        )
         try:
             job.reana_job_id = None
             log.info(f"Job '{job.name}' received, command: {job.shellcmd}")
             container_image = self._get_container_image(job)
             if job.is_shell:
                 # Shell command
-                workflow_uuid = os.getenv("workflow_uuid", "default")
                 job_request_body = {
                     "workflow_uuid": workflow_uuid,
                     "image": container_image,
@@ -178,12 +192,10 @@ def submit_job(rjc_api_client, publisher, job_request_body):
     job_id = str(response["job_id"])
 
     log.info("submitted job:{0}".format(job_id))
-    message = {
-        "progress": build_progress_message(running={"total": 1, "job_ids": [job_id]})
-    }
-    status_running = 1
-    publisher.publish_workflow_status(
-        job_request_body["workflow_uuid"], status_running, message=message
+    publish_job_submission(
+        workflow_uuid=job_request_body["workflow_uuid"],
+        publisher=publisher,
+        reana_job_id=job_id,
     )
     return job_id
 
