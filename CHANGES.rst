@@ -1,13 +1,10 @@
 Changes
 =======
 
-Version 0.8.0 (UNRELEASED)
+Version 0.8.0 (2021-11-22)
 ---------------------------
 
-- Initial public release.
-
-.. admonition:: Please beware
-
-   Please note that REANA is in an early alpha stage of its development. The
-   developer preview releases are meant for early adopters and testers. Please
-   don't rely on released versions for any production purposes yet.
+- Adds initial REANA Snakemake executor implementation.
+- Adds support for snakemake reports generation.
+- Adds support for REANA custom resources.
+- Adds support for parallel job execution.
