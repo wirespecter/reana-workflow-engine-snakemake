@@ -9,6 +9,7 @@
 """REANA Workflow Engine Snakemake configuration."""
 
 import os
+from enum import Enum
 
 MOUNT_CVMFS = os.getenv("REANA_MOUNT_CVMFS", "false")
 
@@ -20,3 +21,39 @@ DEFAULT_SNAKEMAKE_REPORT_FILENAME = "report.html"
 
 SNAKEMAKE_MAX_PARALLEL_JOBS = 100
 """Snakemake maximum number of jobs that can run in parallel."""
+
+POLL_JOBS_STATUS_SLEEP_IN_SECONDS = 10
+"""Time to sleep between polling for job status."""
+
+
+# defined in reana-db component, in reana_db/models.py file as JobStatus
+class JobStatus(Enum):
+    """Enumeration of job statuses.
+
+    Example:
+        JobStatus.started.name == "started"  # True
+    """
+
+    # FIXME: this state is not defined in reana-db but returned by r-job-controller
+    started = 6
+
+    created = 0
+    running = 1
+    finished = 2
+    failed = 3
+    stopped = 4
+    queued = 5
+
+
+# defined in reana-db component, in reana_db/models.py file as RunStatus
+class RunStatus(Enum):
+    """Enumeration of possible run statuses of a workflow."""
+
+    created = 0
+    running = 1
+    finished = 2
+    failed = 3
+    deleted = 4
+    stopped = 5
+    queued = 6
+    pending = 7

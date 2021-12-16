@@ -1,6 +1,11 @@
 Changes
 =======
 
+Version 0.8.1 (UNRELEASED)
+---------------------------
+
+- Adds polling job-controller to determine job statuses instead of checking files.
+
 Version 0.8.0 (2021-11-22)
 ---------------------------
 
