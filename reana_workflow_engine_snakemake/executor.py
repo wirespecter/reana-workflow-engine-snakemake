@@ -81,6 +81,9 @@ class REANAClusterExecutor(GenericClusterExecutor):
                     "kubernetes_memory_limit": job.resources.get(
                         "kubernetes_memory_limit"
                     ),
+                    "kubernetes_job_timeout": job.resources.get(
+                        "kubernetes_job_timeout"
+                    ),
                     "voms_proxy": job.resources.get("voms_proxy", False),
                     "htcondor_max_runtime": job.resources.get(
                         "htcondor_max_runtime", ""
