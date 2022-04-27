@@ -1,18 +1,21 @@
 # This file is part of REANA.
-# Copyright (C) 2021 CERN.
+# Copyright (C) 2021, 2022 CERN.
 #
 # REANA is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
 # Install base image and its dependencies
-FROM python:3.8-slim
+FROM python:3.8
 # hadolint ignore=DL3008, DL3013, DL3015
 RUN apt-get update && \
     apt-get install -y \
-    vim-tiny \
+    cmake \
     gcc \
     graphviz \
-    graphviz-dev && \
+    graphviz-dev \
+    libxrootd-client-dev \
+    vim-tiny \
+    xrootd-client && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     pip install --upgrade pip
@@ -27,7 +30,8 @@ COPY . /code
 
 # Are we debugging?
 ARG DEBUG=0
-RUN if [ "${DEBUG}" -gt 0 ]; then pip install -e ".[debug]"; else pip install .; fi;
+# hadolint ignore=DL3013
+RUN if [ "${DEBUG}" -gt 0 ]; then pip install -e ".[debug,xrootd]"; else pip install ".[xrootd]"; fi;
 
 # Are we building with locally-checked-out shared modules?
 # hadolint ignore=SC2102

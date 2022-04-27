@@ -33,6 +33,9 @@ extras_require = {
         "sphinx-rtd-theme>=0.1.9",
     ],
     "tests": tests_require,
+    "xrootd": [
+        "xrootd>=5.4.2,<6.0",
+    ],
 }
 
 extras_require["all"] = []
