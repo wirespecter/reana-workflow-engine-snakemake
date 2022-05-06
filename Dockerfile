@@ -6,6 +6,9 @@
 
 # Install base image and its dependencies
 FROM python:3.8
+
+ENV DEBIAN_FRONTEND=noninteractive
+
 # hadolint ignore=DL3008, DL3013, DL3015
 RUN apt-get update && \
     apt-get install -y \
@@ -14,6 +17,10 @@ RUN apt-get update && \
     graphviz \
     graphviz-dev \
     libxrootd-client-dev \
+    krb5-config \
+    krb5-user \
+    libauthen-krb5-perl \
+    libkrb5-dev \
     vim-tiny \
     xrootd-client && \
     apt-get clean && \
