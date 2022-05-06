@@ -92,6 +92,8 @@ class REANAClusterExecutor(GenericClusterExecutor):
                     "htcondor_accounting_group": job.resources.get(
                         "htcondor_accounting_group", ""
                     ),
+                    "slurm_partition": job.resources.get("slurm_partition"),
+                    "slurm_time": job.resources.get("slurm_time"),
                 }
                 job_id = submit_job(
                     self.rjc_api_client, self.publisher, job_request_body
