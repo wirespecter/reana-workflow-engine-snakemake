@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of REANA.
-# Copyright (C) 2021 CERN.
+# Copyright (C) 2021, 2022 CERN.
 #
 # REANA is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
 """REANA Workflow Engine Snakemake configuration."""
 
+from distutils.util import strtobool
 import os
 from enum import Enum
 
 MOUNT_CVMFS = os.getenv("REANA_MOUNT_CVMFS", "false")
+
+WORKFLOW_KERBEROS = bool(strtobool(os.getenv("REANA_WORKFLOW_KERBEROS", "false")))
+"""Whether Kerberos is needed for the whole workflow."""
 
 LOGGING_MODULE = "reana-workflow-engine-snakemake"
 """REANA Workflow Engine Snakemake logging module."""

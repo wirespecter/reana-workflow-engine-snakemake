@@ -28,6 +28,7 @@ from reana_workflow_engine_snakemake.config import (
     MOUNT_CVMFS,
     SNAKEMAKE_MAX_PARALLEL_JOBS,
     POLL_JOBS_STATUS_SLEEP_IN_SECONDS,
+    WORKFLOW_KERBEROS,
     JobStatus,
     RunStatus,
 )
@@ -75,7 +76,7 @@ class REANAClusterExecutor(GenericClusterExecutor):
                     "job_name": job.name,
                     "cvmfs_mounts": MOUNT_CVMFS,
                     "compute_backend": job.resources.get("compute_backend", ""),
-                    "kerberos": job.resources.get("kerberos", False),
+                    "kerberos": job.resources.get("kerberos", WORKFLOW_KERBEROS),
                     "unpacked_img": job.resources.get("unpacked_img", False),
                     "kubernetes_uid": job.resources.get("kubernetes_uid"),
                     "kubernetes_memory_limit": job.resources.get(
