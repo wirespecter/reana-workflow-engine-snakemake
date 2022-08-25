@@ -4,6 +4,7 @@ Changes
 Version 0.9.0 (UNRELEASED)
 ---------------------------
 
+- Adds support for Rucio
 - Adds support for XRootD remote file locations in workflow specification definitions.
 - Adds support for Kerberos authentication.
 - Adds support for specifying ``slurm_partition`` and ``slurm_time`` for Slurm compute backend jobs.
