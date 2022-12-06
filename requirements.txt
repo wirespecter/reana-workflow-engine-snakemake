@@ -65,7 +65,7 @@ vine==5.0.0               # via amqp, kombu
 webcolors==1.12           # via jsonschema
 werkzeug==2.2.2           # via reana-commons
 wrapt==1.14.1             # via snakemake
-xrootd==5.5.0             # via -r requirements.in
+xrootd==5.4.2             # via -r requirements.in
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

@@ -34,7 +34,7 @@ extras_require = {
     ],
     "tests": tests_require,
     "xrootd": [
-        "xrootd>=5.4.2,<6.0",
+        "xrootd>=5.4.2,<5.4.3",
     ],
 }
 
