@@ -129,11 +129,13 @@ class REANAClusterExecutor(GenericClusterExecutor):
         workflow_uuid = os.getenv("workflow_uuid", "default")
         job_id = job.reana_job_id
         log.info(f"{job.name} job is {job_status.name}. job_id: {job_id}")
-        message = {
-            "progress": build_progress_message(
-                **{job_status.name: {"total": 1, "job_ids": [job_id]}}
-            )
-        }
+        message = None
+        if job_id:
+            message = {
+                "progress": build_progress_message(
+                    **{job_status.name: {"total": 1, "job_ids": [job_id]}}
+                )
+            }
         self.publisher.publish_workflow_status(
             workflow_uuid, workflow_status.value, message=message
         )
