@@ -4,4 +4,4 @@
 # REANA is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-xrootd>=5.4.2,<5.4.3
+xrootd>=5.5.1,<5.6

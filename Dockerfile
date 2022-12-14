@@ -5,27 +5,44 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 
 # Install base image and its dependencies
-FROM python:3.8
+FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# hadolint ignore=DL3008, DL3013, DL3015
+# hadolint ignore=DL3008, DL3009, DL3013
 RUN apt-get update && \
-    apt-get install -y \
-    cmake \
-    gcc \
-    graphviz \
-    graphviz-dev \
-    libxrootd-client-dev \
-    krb5-config \
-    krb5-user \
-    libauthen-krb5-perl \
-    libkrb5-dev \
-    vim-tiny \
-    xrootd-client && \
+    apt-get install -y --no-install-recommends \
+        cmake \
+        curl \
+        g++ \
+        gcc \
+        gnupg2 \
+        graphviz \
+        graphviz-dev \
+        krb5-config \
+        krb5-user \
+        libauthen-krb5-perl \
+        libkrb5-dev \
+        libssl-dev \
+        make \
+        pkg-config \
+        python3-dev \
+        python3-pip \
+        python3.8 \
+        python3.8-dev \
+        uuid-dev \
+        vim-tiny && \
+    pip install --no-cache-dir --upgrade pip
+
+# hadolint ignore=DL3008, DL4006
+RUN echo "deb [arch=amd64] http://storage-ci.web.cern.ch/storage-ci/debian/xrootd/ focal release" | tee -a /etc/apt/sources.list.d/xrootd.list && \
+    curl -sL http://storage-ci.web.cern.ch/storage-ci/storageci.key | apt-key add - && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        libxrootd-client-dev \
+        xrootd-client && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    pip install --upgrade pip
+    rm -rf /var/lib/apt/lists/*
 
 # Install dependencies
 COPY requirements.txt /code/
