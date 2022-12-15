@@ -8,6 +8,7 @@ Version 0.9.0 (UNRELEASED)
 - Adds support for XRootD remote file locations in workflow specification definitions.
 - Adds support for Kerberos authentication.
 - Adds support for specifying ``slurm_partition`` and ``slurm_time`` for Slurm compute backend jobs.
+- Changes global setting of maximum number of parallel jobs to 300.
 
 Version 0.8.1 (2022-02-07)
 ---------------------------

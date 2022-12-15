@@ -23,7 +23,7 @@ LOGGING_MODULE = "reana-workflow-engine-snakemake"
 DEFAULT_SNAKEMAKE_REPORT_FILENAME = "report.html"
 """Snakemake report default filename."""
 
-SNAKEMAKE_MAX_PARALLEL_JOBS = 100
+SNAKEMAKE_MAX_PARALLEL_JOBS = 300
 """Snakemake maximum number of jobs that can run in parallel."""
 
 POLL_JOBS_STATUS_SLEEP_IN_SECONDS = 10
