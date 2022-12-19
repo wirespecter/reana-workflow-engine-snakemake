@@ -112,7 +112,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install --upgrade pip setuptools py wheel
+          pip install --upgrade pip 'setuptools<65.6' py wheel
           pip install -e .[all]
 
       - name: Run Sphinx documentation with doctests
@@ -136,7 +136,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install --upgrade pip setuptools py
+          pip install --upgrade pip 'setuptools<65.6' py
           pip install twine wheel
           pip install -e .[all]
 
