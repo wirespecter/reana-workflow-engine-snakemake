@@ -1,6 +1,11 @@
 Changes
 =======
 
+Version 0.9.1 (UNRELEASED)
+--------------------------
+
+- Fixes an issue where some workflows would be stuck waiting for already-finished jobs.
+
 Version 0.9.0 (2023-01-19)
 --------------------------
 

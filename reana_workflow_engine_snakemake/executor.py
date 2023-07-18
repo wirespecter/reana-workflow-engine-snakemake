@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of REANA.
-# Copyright (C) 2021, 2022 CERN.
+# Copyright (C) 2021, 2022, 2023 CERN.
 #
 # REANA is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -213,7 +213,12 @@ class REANAClusterExecutor(GenericClusterExecutor):
                     still_running.append(active_job)
 
             with self.lock:
-                self.active_jobs = still_running
+                # Even though we have set active_jobs to a new empty list at the
+                # beginning of _wait_for_jobs, here that list might not be empty anymore
+                # as more jobs might have been added while we were fetching the job
+                # statuses from r-j-controller. For this reason we have to extend the
+                # list, instead of simply setting active_jobs to still_running.
+                self.active_jobs.extend(still_running)
 
             time.sleep(POLL_JOBS_STATUS_SLEEP_IN_SECONDS)
 
