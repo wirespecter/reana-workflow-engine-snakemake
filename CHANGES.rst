@@ -4,6 +4,7 @@ Changes
 Version 0.9.1 (UNRELEASED)
 --------------------------
 
+- Fixes the total job count reported to workflow controller by excluding jobs restored from the workspace and not executed by Snakemake.
 - Fixes an issue where some workflows would be stuck waiting for already-finished jobs.
 
 Version 0.9.0 (2023-01-19)

@@ -17,7 +17,9 @@ def publish_workflow_start(
     workflow_uuid: str, publisher: WorkflowStatusPublisher, job: Job
 ):
     """Publish to MQ the start of the workflow."""
-    job_count = len([rule for rule in job.dag.rules if not rule.norun])
+    job_count = len(
+        [j for j in (job.dag._needrun | job.dag._finished) if not j.rule.norun]
+    )
     total_jobs = {"total": job_count, "job_ids": []}
     status_running = 1
     publisher.publish_workflow_status(
