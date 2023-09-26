@@ -1,11 +1,13 @@
 Changes
 =======
 
-Version 0.9.1 (UNRELEASED)
+Version 0.9.1 (2023-09-27)
 --------------------------
 
-- Fixes the total job count reported to workflow controller by excluding jobs restored from the workspace and not executed by Snakemake.
-- Fixes an issue where some workflows would be stuck waiting for already-finished jobs.
+- Changes remote storage file support to use XRootD 5.6.0.
+- Fixes the reported total number of jobs for restarted workflows by excluding cached jobs that were simply reused from previous runs in the workspace and not really executed by Snakemake.
+- Fixes an issue where workflows could get stuck waiting for already-finished jobs.
+- Fixes container image names to be Podman-compatible.
 
 Version 0.9.0 (2023-01-19)
 --------------------------
