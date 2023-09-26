@@ -20,10 +20,10 @@ connection-pool==0.0.3    # via snakemake
 datrie==0.8.2             # via snakemake
 docutils==0.20.1          # via snakemake
 fastjsonschema==2.18.0    # via nbformat
-filelock==3.12.3          # via snakemake
+filelock==3.12.4          # via snakemake
 fs==2.4.16                # via reana-commons
 gitdb==4.0.10             # via gitpython
-gitpython==3.1.34         # via snakemake
+gitpython==3.1.37         # via snakemake
 idna==3.4                 # via jsonschema, requests
 jinja2==3.1.2             # via snakemake
 jsonpointer==2.4          # via jsonschema
@@ -34,7 +34,7 @@ kombu==5.3.2              # via reana-commons
 markupsafe==2.1.3         # via jinja2, werkzeug
 mock==3.0.5               # via reana-commons
 monotonic==1.6            # via bravado
-msgpack==1.0.5            # via bravado-core
+msgpack==1.0.6            # via bravado-core
 msgpack-python==0.5.6     # via bravado
 nbformat==5.9.2           # via snakemake
 networkx==3.1             # via snakemake
@@ -48,23 +48,23 @@ python-dateutil==2.8.2    # via bravado, bravado-core
 pytz==2023.3.post1        # via bravado-core
 pyyaml==6.0.1             # via bravado, bravado-core, reana-commons, snakemake, swagger-spec-validator
 ratelimiter==1.2.0.post0  # via snakemake
-reana-commons[snakemake_reports]==0.9.3	# via reana-workflow-engine-snakemake (setup.py)
+reana-commons[snakemake_reports]==0.9.3  # via reana-workflow-engine-snakemake (setup.py)
 requests==2.31.0          # via bravado, bravado-core, snakemake
 rfc3987==1.3.8            # via jsonschema
 simplejson==3.19.1        # via bravado, bravado-core
 six==1.16.0               # via bravado, bravado-core, fs, jsonschema, mock, python-dateutil
-smart-open==6.3.0         # via snakemake
-smmap==5.0.0              # via gitdb
+smart-open==6.4.0         # via snakemake
+smmap==5.0.1              # via gitdb
 snakemake[reports]==6.8.0  # via reana-commons
 stopit==1.1.2             # via snakemake
 strict-rfc3339==0.7       # via jsonschema
 swagger-spec-validator==3.0.3  # via bravado-core
 tabulate==0.8.10          # via reana-commons, snakemake
 toposort==1.10            # via snakemake
-traitlets==5.9.0          # via jupyter-core, nbformat
-typing-extensions==4.7.1  # via bravado, filelock, kombu, swagger-spec-validator
+traitlets==5.10.1         # via jupyter-core, nbformat
+typing-extensions==4.8.0  # via bravado, kombu, swagger-spec-validator
 tzdata==2023.3            # via backports-zoneinfo
-urllib3==2.0.4            # via requests
+urllib3==2.0.5            # via requests
 vine==5.0.0               # via amqp, kombu
 wcmatch==8.4.1            # via reana-commons
 webcolors==1.13           # via jsonschema
