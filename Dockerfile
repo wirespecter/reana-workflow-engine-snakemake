@@ -7,6 +7,9 @@
 # Use Ubuntu LTS base image
 FROM docker.io/library/ubuntu:20.04
 
+# Recognise target architecture
+ARG TARGETARCH
+
 # Use default answers in installation commands
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -14,7 +17,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 COPY requirements.txt /code/
 
 # Install all system and Python dependencies in one go
-# hadolint ignore=DL3008, DL3009, DL3013, DL4006
+# hadolint ignore=DL3008,DL3009,DL3013,DL4006
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
         cmake \
@@ -37,12 +40,14 @@ RUN apt-get update -y && \
         uuid-dev \
         vim-tiny && \
     # Install xrootd
-    echo "deb [arch=amd64] http://storage-ci.web.cern.ch/storage-ci/debian/xrootd/ focal release" | tee -a /etc/apt/sources.list.d/xrootd.list && \
-    curl -sL http://storage-ci.web.cern.ch/storage-ci/storageci.key | apt-key add - && \
-    apt-get update -y && \
-    apt-get install -y --no-install-recommends \
-        libxrootd-client-dev \
-        xrootd-client && \
+    if echo "$TARGETARCH" | grep -q "amd64"; then \
+      (echo "deb [arch=amd64] http://storage-ci.web.cern.ch/storage-ci/debian/xrootd/ focal release" | tee -a /etc/apt/sources.list.d/xrootd.list && \
+      curl -sL http://storage-ci.web.cern.ch/storage-ci/storageci.key | apt-key add - && \
+      apt-get update -y && \
+      apt-get install -y --no-install-recommends \
+          libxrootd-client-dev \
+          xrootd-client) \
+    fi && \
     pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r /code/requirements.txt && \
     apt-get remove -y \
@@ -66,11 +71,11 @@ COPY . /code
 # Are we debugging?
 ARG DEBUG=0
 # hadolint ignore=DL3013
-RUN if [ "${DEBUG}" -gt 0 ]; then pip install -e ".[debug,xrootd]"; else pip install ".[xrootd]"; fi;
+RUN if [ "${DEBUG}" -gt 0 ]; then pip install --no-cache-dir -e ".[debug,xrootd]"; else pip install --no-cache-dir ".[xrootd]"; fi;
 
 # Are we building with locally-checked-out shared modules?
 # hadolint ignore=SC2102
-RUN if test -e modules/reana-commons; then pip install -e modules/reana-commons[kubernetes] --upgrade; fi
+RUN if test -e modules/reana-commons; then pip install --no-cache-dir -e modules/reana-commons[kubernetes] --upgrade; fi
 
 # Check for any broken Python dependencies
 RUN pip check
