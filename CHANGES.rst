@@ -4,6 +4,7 @@ Changes
 Version 0.9.2 (UNRELEASED)
 --------------------------
 
+- Fixes creation of image thumbnails for output files in Snakemake HTML execution reports.
 - Fixes container image building on the arm64 architecture.
 
 Version 0.9.1 (2023-09-27)

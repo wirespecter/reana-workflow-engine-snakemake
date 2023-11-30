@@ -27,6 +27,7 @@ RUN apt-get update -y && \
         gnupg2 \
         graphviz \
         graphviz-dev \
+        imagemagick \
         krb5-config \
         krb5-user \
         libauthen-krb5-perl \
@@ -67,6 +68,12 @@ RUN apt-get update -y && \
 # Copy cluster component source code
 WORKDIR /code
 COPY . /code
+
+# Add magick wrapper command to simulate ImageMagick v7 that is necessary by Snakemake
+# to produce thumbnails in generated reports. The wrapper simply passes conversion
+# requests to ImageMagick v6 available on Ubuntu 20.04.
+COPY scripts/magick-wrapper.sh /usr/local/bin/magick
+RUN chmod +x /usr/local/bin/magick
 
 # Are we debugging?
 ARG DEBUG=0

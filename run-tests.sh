@@ -14,6 +14,7 @@ set -o nounset
 
 check_script () {
     shellcheck run-tests.sh
+    shellcheck scripts/magick-wrapper.sh
 }
 
 check_pydocstyle () {
