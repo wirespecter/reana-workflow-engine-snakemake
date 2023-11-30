@@ -1,9 +1,10 @@
 Changes
 =======
 
-Version 0.9.2 (UNRELEASED)
+Version 0.9.2 (2023-12-12)
 --------------------------
 
+- Adds automated container image building for amd64 architecture.
 - Adds metadata labels to Dockerfile.
 - Fixes creation of image thumbnails for output files in Snakemake HTML execution reports.
 - Fixes container image building on the arm64 architecture.
