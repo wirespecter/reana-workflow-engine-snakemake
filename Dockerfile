@@ -13,6 +13,11 @@ ARG TARGETARCH
 # Use default answers in installation commands
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Use distutils provided by the standard Python library instead of the vendored one in
+# setuptools, so that editable installations are stored in the right directory.
+# See https://github.com/pypa/setuptools/issues/3301
+ENV SETUPTOOLS_USE_DISTUTILS=stdlib
+
 # Prepare list of Python dependencies
 COPY requirements.txt /code/
 
@@ -49,7 +54,7 @@ RUN apt-get update -y && \
           libxrootd-client-dev \
           xrootd-client) \
     fi && \
-    pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir --upgrade pip setuptools && \
     pip install --no-cache-dir -r /code/requirements.txt && \
     apt-get remove -y \
         cmake \
