@@ -4,6 +4,7 @@ Changes
 Version 0.9.2 (UNRELEASED)
 --------------------------
 
+- Adds metadata labels to Dockerfile.
 - Fixes creation of image thumbnails for output files in Snakemake HTML execution reports.
 - Fixes container image building on the arm64 architecture.
 

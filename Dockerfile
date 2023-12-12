@@ -95,3 +95,15 @@ RUN pip check
 # Set useful environment variables
 ENV TERM=xterm \
     PYTHONPATH=/workdir
+
+# Set image labels
+LABEL org.opencontainers.image.authors="team@reanahub.io"
+LABEL org.opencontainers.image.created="2023-12-12"
+LABEL org.opencontainers.image.description="REANA reproducible analysis platform - Snakemake workflow engine component"
+LABEL org.opencontainers.image.documentation="https://reana-workflow-engine-snakemake.readthedocs.io/"
+LABEL org.opencontainers.image.licenses="MIT"
+LABEL org.opencontainers.image.source="https://github.com/reanahub/reana-workflow-engine-snakemake"
+LABEL org.opencontainers.image.title="reana-workflow-engine-snakemake"
+LABEL org.opencontainers.image.url="https://github.com/reanahub/reana-workflow-engine-snakemake"
+LABEL org.opencontainers.image.vendor="reanahub"
+LABEL org.opencontainers.image.version="0.9.2"
