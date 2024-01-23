@@ -207,7 +207,10 @@ class REANAClusterExecutor(GenericClusterExecutor):
 
                 if status == JobStatus.finished.name or active_job.job.is_norun:
                     active_job.callback(active_job.job)
-                elif status == JobStatus.failed.name:
+                elif status in (
+                    JobStatus.failed.name,
+                    JobStatus.stopped.name,
+                ):
                     active_job.error_callback(active_job.job)
                 else:
                     still_running.append(active_job)
