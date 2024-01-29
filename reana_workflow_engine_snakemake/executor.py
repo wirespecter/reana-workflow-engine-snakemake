@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of REANA.
-# Copyright (C) 2021, 2022, 2023 CERN.
+# Copyright (C) 2021, 2022, 2023, 2024 CERN.
 #
 # REANA is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -10,7 +10,7 @@
 
 import os
 import logging
-import time
+import asyncio
 from collections import namedtuple
 from typing import Callable
 
@@ -18,6 +18,7 @@ from bravado.exception import HTTPNotFound
 from reana_commons.config import REANA_DEFAULT_SNAKEMAKE_ENV_IMAGE
 from reana_commons.utils import build_progress_message
 from snakemake import snakemake
+from snakemake.common import async_lock
 from snakemake.executors import ClusterExecutor, GenericClusterExecutor
 from snakemake.jobs import Job
 from snakemake import scheduler  # for monkeypatch
@@ -187,13 +188,13 @@ class REANAClusterExecutor(GenericClusterExecutor):
             )
             return JobStatus.failed.name
 
-    def _wait_for_jobs(self):
+    async def _wait_for_jobs(self):
         """Override _wait_for_jobs method to poll job-controller for job statuses.
 
         Original GenericClusterExecutor._wait_for_jobs method checks success/failure via .jobfinished or .jobfailed files.
         """
         while True:
-            with self.lock:
+            async with async_lock(self.lock):
                 if not self.wait:
                     return
                 active_jobs = self.active_jobs
@@ -215,7 +216,7 @@ class REANAClusterExecutor(GenericClusterExecutor):
                 else:
                     still_running.append(active_job)
 
-            with self.lock:
+            async with async_lock(self.lock):
                 # Even though we have set active_jobs to a new empty list at the
                 # beginning of _wait_for_jobs, here that list might not be empty anymore
                 # as more jobs might have been added while we were fetching the job
@@ -223,7 +224,7 @@ class REANAClusterExecutor(GenericClusterExecutor):
                 # list, instead of simply setting active_jobs to still_running.
                 self.active_jobs.extend(still_running)
 
-            time.sleep(POLL_JOBS_STATUS_SLEEP_IN_SECONDS)
+            await asyncio.sleep(POLL_JOBS_STATUS_SLEEP_IN_SECONDS)
 
 
 def submit_job(rjc_api_client, publisher, job_request_body):

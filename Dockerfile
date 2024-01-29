@@ -1,5 +1,5 @@
 # This file is part of REANA.
-# Copyright (C) 2021, 2022, 2023 CERN.
+# Copyright (C) 2021, 2022, 2023, 2024 CERN.
 #
 # REANA is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -101,6 +101,10 @@ RUN pip check
 # Set useful environment variables
 ENV TERM=xterm \
     PYTHONPATH=/workdir
+
+# Create and set cache directory to be used by Snakemake
+RUN mkdir -p /.cache/snakemake && chmod ug+rwx /.cache/snakemake
+ENV XDG_CACHE_HOME=/.cache
 
 # Set image labels
 LABEL org.opencontainers.image.authors="team@reanahub.io"
