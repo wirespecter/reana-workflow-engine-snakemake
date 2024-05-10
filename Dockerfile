@@ -47,7 +47,13 @@ RUN apt-get update -y && \
         vim-tiny && \
     # Install xrootd
     if echo "$TARGETARCH" | grep -q "amd64"; then \
-      (echo "deb [arch=amd64] http://storage-ci.web.cern.ch/storage-ci/debian/xrootd/ focal release" | tee -a /etc/apt/sources.list.d/xrootd.list && \
+      (if curl -o /dev/null -Isw '%{http_code}' https://storage-ci.web.cern.ch/storage-ci/debian/xrootd/dists/focal/Release | grep -q 200; then \
+        echo "deb [arch=amd64] http://storage-ci.web.cern.ch/storage-ci/debian/xrootd/ focal release" | tee -a /etc/apt/sources.list.d/xrootd.list; \
+      elif curl -o /dev/null -Isw '%{http_code}' https://storage-ci.web.cern.ch/storage-ci/old_debian/xrootd/dists/focal/Release | grep -q 200; then \
+        echo "deb [arch=amd64] http://storage-ci.web.cern.ch/storage-ci/old_debian/xrootd/ focal release" | tee -a /etc/apt/sources.list.d/xrootd.list; \
+      else \
+        echo "[ERROR] Cannot find XRootD package repository location. Exiting."; exit 1; \
+      fi && \
       curl -sL http://storage-ci.web.cern.ch/storage-ci/storageci.key | apt-key add - && \
       apt-get update -y && \
       apt-get install -y --no-install-recommends \
