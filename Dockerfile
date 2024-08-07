@@ -5,7 +5,7 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 
 # Use Ubuntu LTS base image
-FROM docker.io/library/ubuntu:20.04
+FROM docker.io/library/ubuntu:24.04
 
 # Recognise target architecture
 ARG TARGETARCH
@@ -13,10 +13,8 @@ ARG TARGETARCH
 # Use default answers in installation commands
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Use distutils provided by the standard Python library instead of the vendored one in
-# setuptools, so that editable installations are stored in the right directory.
-# See https://github.com/pypa/setuptools/issues/3301
-ENV SETUPTOOLS_USE_DISTUTILS=stdlib
+# Allow pip to install packages in the system site-packages dir
+ENV PIP_BREAK_SYSTEM_PACKAGES=true
 
 # Prepare list of Python dependencies
 COPY requirements.txt /code/
@@ -29,20 +27,21 @@ RUN apt-get update -y && \
         curl \
         g++ \
         gcc \
+        git \
         gnupg2 \
         graphviz \
         graphviz-dev \
         imagemagick \
         krb5-config \
         krb5-user \
-        libauthen-krb5-perl \
+        libauthen-krb5-simple-perl \
         libkrb5-dev \
         libssl-dev \
         make \
         pkg-config \
-        python3-dev \
+        python3.12-dev \
         python3-pip \
-        python3.8 \
+        python3.12 \
         uuid-dev \
         vim-tiny && \
     # Install xrootd
@@ -60,17 +59,18 @@ RUN apt-get update -y && \
           libxrootd-client-dev \
           xrootd-client) \
     fi && \
-    pip install --no-cache-dir --upgrade pip 'setuptools<71' && \
+    pip install --no-cache-dir --upgrade setuptools && \
     pip install --no-cache-dir -r /code/requirements.txt && \
     apt-get remove -y \
         cmake \
         g++ \
         gcc \
+        git \
         graphviz-dev \
         libssl-dev \
         make \
         pkg-config \
-        python3-dev \
+        python3.12-dev \
         uuid-dev && \
     apt-get autoremove -y && \
     apt-get clean && \
@@ -82,7 +82,7 @@ COPY . /code
 
 # Add magick wrapper command to simulate ImageMagick v7 that is necessary by Snakemake
 # to produce thumbnails in generated reports. The wrapper simply passes conversion
-# requests to ImageMagick v6 available on Ubuntu 20.04.
+# requests to ImageMagick v6 available on Ubuntu 24.04.
 COPY scripts/magick-wrapper.sh /usr/local/bin/magick
 RUN chmod +x /usr/local/bin/magick
 
@@ -92,14 +92,22 @@ ARG DEBUG=0
 RUN if [ "${DEBUG}" -gt 0 ]; then pip install --no-cache-dir -e ".[debug,xrootd]"; else pip install --no-cache-dir ".[xrootd]"; fi;
 
 # Are we building with locally-checked-out shared modules?
-# hadolint ignore=DL3013
-RUN if test -e modules/reana-commons; then \
+# hadolint ignore=DL3008,DL3013
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+      git && \
+    if test -e modules/reana-commons; then \
       if [ "${DEBUG}" -gt 0 ]; then \
         pip install --no-cache-dir -e "modules/reana-commons[snakemake_reports]" --upgrade; \
       else \
         pip install --no-cache-dir "modules/reana-commons[snakemake_reports]" --upgrade; \
       fi \
-    fi
+    fi && \
+    apt-get remove -y \
+        git && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Check for any broken Python dependencies
 RUN pip check
